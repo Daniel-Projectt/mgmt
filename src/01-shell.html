@@ -1,0 +1,139 @@
+<div class="wrap">
+
+  <header>
+    <svg class="emblem" viewBox="0 0 120 120" aria-hidden="true"><use href="#emblem"/></svg>
+    <p class="eyebrow">Study Guide</p>
+    <h1>Principles of Management</h1>
+    <p class="sub">Exam 2 &middot; planning &amp; goals &middot; decision making &middot; strategic management &middot; organizing &middot; people &amp; change</p>
+    <svg class="orn" viewBox="0 0 320 44" aria-hidden="true"><use href="#flourish"/></svg>
+  </header>
+
+  <nav class="topics" role="tablist" aria-label="Topics">
+    <button class="topic-btn" role="tab" data-topic="guide"    aria-selected="true">Guide</button>
+    <button class="topic-btn" role="tab" data-topic="plan"     aria-selected="false">Planning</button>
+    <button class="topic-btn" role="tab" data-topic="decide"   aria-selected="false">Decisions</button>
+    <button class="topic-btn" role="tab" data-topic="strategy" aria-selected="false">Strategy</button>
+    <button class="topic-btn" role="tab" data-topic="organize" aria-selected="false">Organizing</button>
+    <button class="topic-btn" role="tab" data-topic="people"   aria-selected="false">People</button>
+    <button class="topic-btn" role="tab" data-topic="exam"     aria-selected="false">Practice Exam</button>
+  </nav>
+
+  <main>
+
+    <!-- ================= GUIDE ================= -->
+    <section class="topic" id="topic-guide">
+      <p class="intro">No handout for this one &mdash; so the guide is what <b>ten Quizlet sets</b> for this exam (638 cards) agree on, grouped by concept and ranked by how many sets test it. Check an item off once you can explain it without looking; <b>Study it</b> jumps to the notes, the small buttons to each subsection.</p>
+      <div class="modes"><div class="seg" data-modes="guide">
+        <button type="button" data-mode="overview" aria-pressed="true">The review list</button>
+      </div></div>
+      <div class="panel" data-panel="guide/overview"><div id="guideRoot"></div></div>
+    </section>
+
+    <!-- ================= PLANNING ================= -->
+    <section class="topic" id="topic-plan" hidden>
+      <p class="intro">Planning &amp; Goals: what planning is and why it comes first, the mission and vision, the three levels of goals and plans, the kinds of plans, SMART goals and management by objectives, and planning for what might go wrong.</p>
+      <div class="modes"><div class="seg" data-modes="plan">
+        <button type="button" data-mode="notes" aria-pressed="true">Notes</button>
+        <button type="button" data-mode="cards" aria-pressed="false">Flashcards</button>
+        <button type="button" data-mode="match" aria-pressed="false">Match</button>
+        <button type="button" data-mode="quiz" aria-pressed="false">Quiz</button>
+      </div></div>
+      <div class="panel" data-panel="plan/notes"><div id="planNotes"></div></div>
+      <div class="panel" data-panel="plan/cards" hidden>
+        <p class="hint">Front: the term. Back: what it means. Space flips, arrows move.</p>
+        <div class="toolbar"><span class="label">Deck</span><div class="seg" data-decks="plan"></div><button class="btn" type="button" data-shuffle="plan">Shuffle deck</button></div>
+        <div id="planCards"></div>
+      </div>
+      <div class="panel" data-panel="plan/match" hidden><p class="hint">Tap a term, then the line that defines it.</p><div id="planMatch"></div></div>
+      <div class="panel" data-panel="plan/quiz" hidden><p class="hint">Multiple choice, true/false and application questions. Keys <kbd>1</kbd>&ndash;<kbd>4</kbd> answer, <kbd>Enter</kbd> moves on.</p><div id="planQuiz"></div></div>
+    </section>
+
+    <!-- ================= DECISIONS ================= -->
+    <section class="topic" id="topic-decide" hidden>
+      <p class="intro">Decision Making: the rational model and its steps, the ways real decisions fall short of it, programmed against nonprogrammed decisions and how much you know when you make them, the four decision styles and the biases, and deciding in groups.</p>
+      <div class="modes"><div class="seg" data-modes="decide">
+        <button type="button" data-mode="notes" aria-pressed="true">Notes</button>
+        <button type="button" data-mode="cards" aria-pressed="false">Flashcards</button>
+        <button type="button" data-mode="match" aria-pressed="false">Match</button>
+        <button type="button" data-mode="quiz" aria-pressed="false">Quiz</button>
+      </div></div>
+      <div class="panel" data-panel="decide/notes"><div id="decideNotes"></div></div>
+      <div class="panel" data-panel="decide/cards" hidden>
+        <div class="toolbar"><span class="label">Deck</span><div class="seg" data-decks="decide"></div><button class="btn" type="button" data-shuffle="decide">Shuffle deck</button></div>
+        <div id="decideCards"></div>
+      </div>
+      <div class="panel" data-panel="decide/match" hidden><div id="decideMatch"></div></div>
+      <div class="panel" data-panel="decide/quiz" hidden><div id="decideQuiz"></div></div>
+    </section>
+
+    <!-- ================= STRATEGY ================= -->
+    <section class="topic" id="topic-strategy" hidden>
+      <p class="intro">Strategic Management: the five-step process and competitive advantage, SWOT and scanning the environment, Porter&rsquo;s five forces and his competitive strategies, and the BCG matrix with the grand strategies.</p>
+      <div class="modes"><div class="seg" data-modes="strategy">
+        <button type="button" data-mode="notes" aria-pressed="true">Notes</button>
+        <button type="button" data-mode="cards" aria-pressed="false">Flashcards</button>
+        <button type="button" data-mode="match" aria-pressed="false">Match</button>
+        <button type="button" data-mode="quiz" aria-pressed="false">Quiz</button>
+      </div></div>
+      <div class="panel" data-panel="strategy/notes"><div id="strategyNotes"></div></div>
+      <div class="panel" data-panel="strategy/cards" hidden>
+        <div class="toolbar"><span class="label">Deck</span><div class="seg" data-decks="strategy"></div><button class="btn" type="button" data-shuffle="strategy">Shuffle deck</button></div>
+        <div id="strategyCards"></div>
+      </div>
+      <div class="panel" data-panel="strategy/match" hidden><div id="strategyMatch"></div></div>
+      <div class="panel" data-panel="strategy/quiz" hidden><div id="strategyQuiz"></div></div>
+    </section>
+
+    <!-- ================= ORGANIZING ================= -->
+    <section class="topic" id="topic-organize" hidden>
+      <p class="intro">Organizing: the organization chart and its dimensions, the types of structure from functional to matrix to virtual, authority and delegation, and organizational culture.</p>
+      <div class="modes"><div class="seg" data-modes="organize">
+        <button type="button" data-mode="notes" aria-pressed="true">Notes</button>
+        <button type="button" data-mode="cards" aria-pressed="false">Flashcards</button>
+        <button type="button" data-mode="match" aria-pressed="false">Match</button>
+        <button type="button" data-mode="quiz" aria-pressed="false">Quiz</button>
+      </div></div>
+      <div class="panel" data-panel="organize/notes"><div id="organizeNotes"></div></div>
+      <div class="panel" data-panel="organize/cards" hidden>
+        <div class="toolbar"><span class="label">Deck</span><div class="seg" data-decks="organize"></div><button class="btn" type="button" data-shuffle="organize">Shuffle deck</button></div>
+        <div id="organizeCards"></div>
+      </div>
+      <div class="panel" data-panel="organize/match" hidden><div id="organizeMatch"></div></div>
+      <div class="panel" data-panel="organize/quiz" hidden><div id="organizeQuiz"></div></div>
+    </section>
+
+    <!-- ================= PEOPLE ================= -->
+    <section class="topic" id="topic-people" hidden>
+      <p class="intro">People &amp; Change: the material only a few of the ten sets reach &mdash; managing change, motivation, human resources, groups and leadership, and doing business across borders. Lighter weight, but on the page in case his exam goes there.</p>
+      <div class="modes"><div class="seg" data-modes="people">
+        <button type="button" data-mode="notes" aria-pressed="true">Notes</button>
+        <button type="button" data-mode="cards" aria-pressed="false">Flashcards</button>
+        <button type="button" data-mode="match" aria-pressed="false">Match</button>
+        <button type="button" data-mode="quiz" aria-pressed="false">Quiz</button>
+      </div></div>
+      <div class="panel" data-panel="people/notes"><div id="peopleNotes"></div></div>
+      <div class="panel" data-panel="people/cards" hidden>
+        <div class="toolbar"><span class="label">Deck</span><div class="seg" data-decks="people"></div><button class="btn" type="button" data-shuffle="people">Shuffle deck</button></div>
+        <div id="peopleCards"></div>
+      </div>
+      <div class="panel" data-panel="people/match" hidden><div id="peopleMatch"></div></div>
+      <div class="panel" data-panel="people/quiz" hidden><div id="peopleQuiz"></div></div>
+    </section>
+
+    <!-- ================= PRACTICE EXAM ================= -->
+    <section class="topic" id="topic-exam" hidden>
+      <p class="intro">Questions from all five topics. Every one is labelled by how many of the ten Quizlet sets test it, so you can drill the concepts most of them agree on &mdash; or the ones few of them reach. Reshuffled each run, with the reason behind every answer.</p>
+      <div class="modes"><div class="seg" data-modes="exam">
+        <button type="button" data-mode="mock" aria-pressed="true">Practice exam</button>
+      </div></div>
+      <div class="panel" data-panel="exam/mock"><div id="mockExam"></div></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Built from the concepts that repeat across ten Quizlet sets for Principles of Management Exam 2 (638 cards), organised into the topics of a standard text: planning, strategy, decision making, organizing, and the people chapters. Where the sets disagree or are wrong, the page says so.</p>
+    <span class="keys">Flashcards <kbd>&larr;</kbd> <kbd>&rarr;</kbd> <kbd>Space</kbd> &nbsp;&middot;&nbsp; Quizzes <kbd>1</kbd>&ndash;<kbd>4</kbd> <kbd>Enter</kbd></span>
+  </footer>
+
+</div>

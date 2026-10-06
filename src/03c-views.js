@@ -22,7 +22,7 @@ function renderGuide(){
       '<h2>'+COURSE.exam+'</h2><p class="hscope">'+COURSE.scope+'</p>'+
       '<ul class="hrules">'+COURSE.rules.map(li).join("")+'</ul>'+
     '</div>'+
-    '<div class="q3call"><div><b>Quiz #3 &middot; Wednesday, Oct 7</b><span>Chapters 9 and 10 &mdash; start with the last three slides.</span></div><button class="btn primary" type="button" data-go="q3/notes" data-a="q3-hints">Open Quiz 3</button></div>'+
+    '<div class="q3call"><div><b>Quiz #3 &middot; Wednesday, Oct 7</b><span>Chapters 9 and 10 &mdash; the last three slides, nothing else.</span></div><button class="btn primary" type="button" data-go="q3/notes" data-a="q3-hints">Open Quiz 3</button></div>'+
     '<p class="note">'+COURSE.about+'</p>'+
     '<div class="gprog"><span class="count" id="gCount"></span><div class="bar"><i id="gBar" style="width:0"></i></div></div>';
   GUIDE.sections.forEach(function(s){

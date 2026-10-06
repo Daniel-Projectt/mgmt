@@ -168,7 +168,7 @@ head('quiz 3');
 topic('guide');
 ok(!!$('#guideRoot .q3call') && /Oct 7/.test($('#guideRoot .q3call').textContent), 'the guide announces Quiz 3');
 click($('#guideRoot .q3call button'));
-ok(visible($('#topic-q3')) && visible(panel('q3/notes')) && $$('#q3Notes .note-sec').length === 8, 'the call-out opens the Quiz 3 notes, eight sections');
+ok(visible($('#topic-q3')) && visible(panel('q3/notes')) && $$('#q3Notes .note-sec').length === 1, 'the call-out opens the Quiz 3 notes, one short section');
 ok(/Duplication/.test($('#q3-hints').textContent) && $$('#q3-terms + .tblwrap tbody tr').length === 13, 'the three slide answers and the thirteen terms come first');
 mode('q3', 'cards');
 ok($$('.seg[data-decks="q3"] button').length === 2 && /13 terms/.test($('.seg[data-decks="q3"] button').textContent) && !!$('#q3Cards .flash'), 'flashcards open on the 13 terms');

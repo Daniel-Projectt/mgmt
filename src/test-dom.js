@@ -173,7 +173,7 @@ ok(/Duplication/.test($('#q3-hints').textContent) && $$('#q3-terms + .tblwrap tb
 mode('q3', 'cards');
 ok($$('.seg[data-decks="q3"] button').length === 2 && /13 terms/.test($('.seg[data-decks="q3"] button').textContent) && !!$('#q3Cards .flash'), 'flashcards open on the 13 terms');
 mode('q3', 'match'); ok($$('#q3Match .L .tile').length === 6, 'match round');
-mode('q3', 'quiz'); answerQuiz($('#q3Quiz'), 'quiz 3');
+mode('q3', 'quiz'); ok($$('#q3Quiz .dots i').length === 50, 'the Quiz 3 quiz has all fifty questions', $$('#q3Quiz .dots i').length); answerQuiz($('#q3Quiz'), 'quiz 3');
 ok(!$('#q3Quiz .qtag.tier'), 'no Quizlet tier label on Quiz 3 questions');
 
 head('the exam’s tier filter');

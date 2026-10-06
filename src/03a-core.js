@@ -139,6 +139,8 @@ function topicQuestions(tp, keys, n){
   if(out.length < n) out = drawDistinct(out.concat(bank, gen), n);
   return shuffle(out);
 }
+/* Quiz 3 is short enough to take whole: every written question, reshuffled each time */
+function quiz3All(){ return shuffle(bankFor("q3").map(function(x){ return fromBank(x.b, x.i); })); }
 /* Rebuild exact questions from their keys ("tp:i" bank, "tp:pN" / "tp:pNr" pairs); anything malformed is dropped */
 function questionsByKeys(keys){
   return uniqBy(keys, function(k){ return k; }).map(function(k){

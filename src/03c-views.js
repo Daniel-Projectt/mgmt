@@ -130,7 +130,7 @@ STUDY.forEach(function(tp){
   segWire('.seg[data-decks="'+tp+'"]', "data-deck", function(v){ cur = v; engines[tp+"Cards"].load(deckFor(tp, v)); });
   $('[data-shuffle="'+tp+'"]').addEventListener("click", function(){ engines[tp+"Cards"].load(deckFor(tp, cur)); });
   engines[tp+"Match"] = makeMatch($("#"+tp+"Match"), function(){ return matchRound(tp, 6); });
-  engines[tp+"Quiz"]  = makeQuiz($("#"+tp+"Quiz"), function(){ return topicQuestions(tp, null, 10); });
+  engines[tp+"Quiz"]  = makeQuiz($("#"+tp+"Quiz"), tp === "q3" ? quiz3All : function(){ return topicQuestions(tp, null, 10); });
   renderNotes(tp);
 });
 renderGuide();

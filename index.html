@@ -540,7 +540,7 @@ kbd{font-family:var(--sans);font-size:10px;border:1px solid var(--line-strong);b
         <div id="q3Cards"></div>
       </div>
       <div class="panel" data-panel="q3/match" hidden><p class="hint">Tap a term, then the line that defines it.</p><div id="q3Match"></div></div>
-      <div class="panel" data-panel="q3/quiz" hidden><p class="hint">Multiple choice, true/false and application questions. Keys <kbd>1</kbd>&ndash;<kbd>4</kbd> answer, <kbd>Enter</kbd> moves on.</p><div id="q3Quiz"></div></div>
+      <div class="panel" data-panel="q3/quiz" hidden><p class="hint">All 50 questions on the last three slides, in a new order each time. Keys <kbd>1</kbd>&ndash;<kbd>4</kbd> answer, <kbd>Enter</kbd> moves on.</p><div id="q3Quiz"></div></div>
     </section>
 
     <section class="topic" id="topic-plan" hidden>
@@ -2065,6 +2065,8 @@ function topicQuestions(tp, keys, n){
   if(out.length < n) out = drawDistinct(out.concat(bank, gen), n);
   return shuffle(out);
 }
+/* Quiz 3 is short enough to take whole: every written question, reshuffled each time */
+function quiz3All(){ return shuffle(bankFor("q3").map(function(x){ return fromBank(x.b, x.i); })); }
 /* Rebuild exact questions from their keys ("tp:i" bank, "tp:pN" / "tp:pNr" pairs); anything malformed is dropped */
 function questionsByKeys(keys){
   return uniqBy(keys, function(k){ return k; }).map(function(k){
@@ -2169,7 +2171,7 @@ function matchRound(tp, n){
 if(typeof window === "undefined"){
   module.exports = {CH:CH, COURSE:COURSE, GUIDE:GUIDE,
     QB:QB, PAIRSETS:PAIRSETS, VERDICTS:VERDICTS, CHAPTERS:CHAPTERS, TOPIC_NAMES:TOPIC_NAMES, SEC_TITLES:SEC_TITLES, SEC_CHAPTER:SEC_CHAPTER,
-    STUDY:STUDY, Q3_SECTIONS:Q3_SECTIONS, Q3_TERMS:Q3_TERMS, CONFIRMED:CONFIRMED, TIERS:TIERS, TIER_TITLES:TIER_TITLES, REVIEW_NOTE:REVIEW_NOTE, hotOf:hotOf, finalFifty:finalFifty, meaningOf:meaningOf, sameThing:sameThing,
+    STUDY:STUDY, quiz3All:quiz3All, Q3_SECTIONS:Q3_SECTIONS, Q3_TERMS:Q3_TERMS, CONFIRMED:CONFIRMED, TIERS:TIERS, TIER_TITLES:TIER_TITLES, REVIEW_NOTE:REVIEW_NOTE, hotOf:hotOf, finalFifty:finalFifty, meaningOf:meaningOf, sameThing:sameThing,
     fromBank:fromBank, fromPair:fromPair, topicQuestions:topicQuestions, mockQuestions:mockQuestions, questionsByKeys:questionsByKeys,
     deckFor:deckFor, matchRound:matchRound, verdictFor:verdictFor};
   return;
@@ -2502,7 +2504,7 @@ STUDY.forEach(function(tp){
   segWire('.seg[data-decks="'+tp+'"]', "data-deck", function(v){ cur = v; engines[tp+"Cards"].load(deckFor(tp, v)); });
   $('[data-shuffle="'+tp+'"]').addEventListener("click", function(){ engines[tp+"Cards"].load(deckFor(tp, cur)); });
   engines[tp+"Match"] = makeMatch($("#"+tp+"Match"), function(){ return matchRound(tp, 6); });
-  engines[tp+"Quiz"]  = makeQuiz($("#"+tp+"Quiz"), function(){ return topicQuestions(tp, null, 10); });
+  engines[tp+"Quiz"]  = makeQuiz($("#"+tp+"Quiz"), tp === "q3" ? quiz3All : function(){ return topicQuestions(tp, null, 10); });
   renderNotes(tp);
 });
 renderGuide();

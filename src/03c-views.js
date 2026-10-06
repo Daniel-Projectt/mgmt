@@ -133,6 +133,7 @@ STUDY.forEach(function(tp){
   engines[tp+"Quiz"]  = makeQuiz($("#"+tp+"Quiz"), tp === "q3" ? quiz3All : function(){ return topicQuestions(tp, null, 10); });
   renderNotes(tp);
 });
+renderNotes("more");
 renderGuide();
 
 var ON_SHOW = {"exam/mock":function(){ if(!engines.mock) renderMockSetup(); }};
@@ -143,8 +144,8 @@ STUDY.forEach(function(tp){
   KEYS[tp+"/cards"] = function(e){ return engines[tp+"Cards"].keys(e); };
   KEYS[tp+"/quiz"]  = function(e){ return engines[tp+"Quiz"].keys(e); };
 });
-var TOPICS = ["guide","q3","plan","decide","strategy","organize","people","exam"];
-var currentTopic = "guide", currentMode = {guide:"overview", q3:"notes", plan:"notes", decide:"notes", strategy:"notes", organize:"notes", people:"notes", exam:"mock"};
+var TOPICS = ["q3","more","guide","plan","decide","strategy","organize","people","exam"];
+var currentTopic = "q3", lastElse = "more", currentMode = {guide:"overview", q3:"notes", more:"notes", plan:"notes", decide:"notes", strategy:"notes", organize:"notes", people:"notes", exam:"mock"};
 function showMode(topic, mode){
   currentMode[topic] = mode;
   $$('.seg[data-modes="'+topic+'"] button').forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === mode)); });
@@ -157,12 +158,18 @@ function showTopic(id){
   currentTopic = id;
   $$(".topic-btn").forEach(function(b){ b.setAttribute("aria-selected", String(b.getAttribute("data-topic") === id)); });
   $$(".topic").forEach(function(s){ s.hidden = (s.id !== "topic-"+id); });
+  /* Quiz 3 stands alone; every other tab lives under "Everything else" */
+  var other = (id !== "q3");
+  if(other) lastElse = id;
+  $("#elseNav").hidden = !other;
+  $("#elseBtn").setAttribute("aria-expanded", String(other));
   showMode(id, currentMode[id]);
   store.set("topic", id);
 }
 $$(".topic-btn").forEach(function(b){
   b.addEventListener("click", function(){ showTopic(b.getAttribute("data-topic")); window.scrollTo({top:$(".topics").offsetTop - 8, behavior:"smooth"}); });
 });
+$("#elseBtn").addEventListener("click", function(){ showTopic(lastElse); window.scrollTo({top:$(".topics").offsetTop - 8, behavior:"smooth"}); });
 $$(".seg[data-modes]").forEach(function(seg){
   seg.addEventListener("click", function(e){
     var b = e.target.closest ? e.target.closest("button[data-mode]") : null;
@@ -181,7 +188,9 @@ document.addEventListener("keydown", function(e){
 (function(){
   var t = store.get("topic");
   TOPICS.forEach(function(k){ var m = store.get("mode."+k); if(m && $('.seg[data-modes="'+k+'"] button[data-mode="'+m+'"]')) currentMode[k] = m; });
-  showTopic(t && TOPICS.indexOf(t) >= 0 ? t : "guide");
+  /* the first visit after Quiz 3 was added lands on Quiz 3, whatever was open before */
+  if(!store.get("seenQ3")){ t = "q3"; store.set("seenQ3", "1"); }
+  showTopic(t && TOPICS.indexOf(t) >= 0 ? t : "q3");
 })();
 
 /* ---- offline copy: the service worker keeps the page on the phone ---- */

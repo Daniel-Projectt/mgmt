@@ -9,8 +9,12 @@
   </header>
 
   <nav class="topics" role="tablist" aria-label="Topics">
-    <button class="topic-btn" role="tab" data-topic="guide"    aria-selected="true">Guide</button>
-    <button class="topic-btn" role="tab" data-topic="q3"       aria-selected="false">Quiz 3</button>
+    <button class="topic-btn" role="tab" data-topic="q3" aria-selected="true">Quiz 3</button>
+    <button class="group-btn" type="button" id="elseBtn" aria-expanded="false">Everything else</button>
+  </nav>
+  <nav class="topics sub" id="elseNav" aria-label="Everything else" hidden>
+    <button class="topic-btn" role="tab" data-topic="more"     aria-selected="false">Ch. 9&ndash;10 notes</button>
+    <button class="topic-btn" role="tab" data-topic="guide"    aria-selected="false">Exam 2 guide</button>
     <button class="topic-btn" role="tab" data-topic="plan"     aria-selected="false">Planning</button>
     <button class="topic-btn" role="tab" data-topic="decide"   aria-selected="false">Decisions</button>
     <button class="topic-btn" role="tab" data-topic="strategy" aria-selected="false">Strategy</button>
@@ -22,7 +26,7 @@
   <main>
 
     <!-- ================= GUIDE ================= -->
-    <section class="topic" id="topic-guide">
+    <section class="topic" id="topic-guide" hidden>
       <p class="intro">No handout for this one &mdash; so the guide is what <b>ten Quizlet sets</b> for this exam (638 cards) agree on, grouped by concept and ranked by how many sets test it. Check an item off once you can explain it without looking; <b>Study it</b> jumps to the notes, the small buttons to each subsection.</p>
       <div class="modes"><div class="seg" data-modes="guide">
         <button type="button" data-mode="overview" aria-pressed="true">The review list</button>
@@ -31,7 +35,12 @@
     </section>
 
     <!-- ================= PLANNING ================= -->
-    <section class="topic" id="topic-q3" hidden>
+    <section class="topic" id="topic-more" hidden>
+      <p class="intro">The rest of Chapters 9 and 10 &mdash; not on the last three slides, so not needed for Quiz 3. Here for later.</p>
+      <div class="panel" data-panel="more/notes"><div id="moreNotes"></div></div>
+    </section>
+
+    <section class="topic" id="topic-q3">
       <p class="intro">Quiz #3 is Wednesday, October 7, on Chapters 9 and 10. This is only what is on the last three slides: three questions, two lists and thirteen terms.</p>
       <div class="modes"><div class="seg" data-modes="q3">
         <button type="button" data-mode="notes" aria-pressed="true">Notes</button>

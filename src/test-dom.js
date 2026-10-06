@@ -45,7 +45,15 @@ function answerQuiz(root, label) {
 
 head('landing');
 ok(errors.length === 0, 'no errors while loading', errors.join(' || '));
-ok(visible($('#topic-guide')) && !visible($('#topic-plan')), 'opens on the Guide');
+ok(visible($('#topic-q3')) && !visible($('#topic-guide')) && $('#elseNav').hidden, 'opens on Quiz 3, with everything else tucked away');
+click($('#elseBtn'));
+ok(visible($('#topic-more')) && !$('#elseNav').hidden && $('#elseBtn').getAttribute('aria-expanded') === 'true' && $$('#moreNotes .note-sec').length === 7, 'Everything else opens the other tabs, starting on the Chapter 9-10 notes');
+topic('plan'); topic('q3');
+ok($('#elseNav').hidden, 'back on Quiz 3 the other tabs are hidden again');
+click($('#elseBtn'));
+ok(visible($('#topic-plan')), 'Everything else returns to the tab you last had open there');
+topic('guide');
+ok(visible($('#topic-guide')) && !visible($('#topic-plan')), 'the Exam 2 guide still opens');
 const items = $$('#guideRoot .gitem');
 ok(items.length === 24, 'guide shows the 24 sections of the outline', items.length);
 ok(/0 of 24/.test($('#gCount').textContent), 'progress starts at 0 of 24', $('#gCount').textContent);
@@ -163,7 +171,7 @@ ok(/"types":"ap"/.test(w.localStorage.getItem('mgmt.mockcfg') || ''), 'exam sett
 head('remembers where you were');
 topic('strategy'); mode('strategy', 'cards');
 ok(w.localStorage.getItem('mgmt.topic') === 'strategy' && w.localStorage.getItem('mgmt.mode.strategy') === 'cards', 'topic and mode saved');
-ok($$('.topic-btn').length === 8, 'eight tabs');
+ok($$('.topic-btn').length === 9, 'nine tabs');
 head('quiz 3');
 topic('guide');
 ok(!!$('#guideRoot .q3call') && /Oct 7/.test($('#guideRoot .q3call').textContent), 'the guide announces Quiz 3');

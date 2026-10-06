@@ -153,3 +153,12 @@
 .tbl.q3t th{white-space:normal}
 .tbl.q3t td.head{white-space:normal;letter-spacing:.1em}
 .tbl.q3t td{padding:11px 10px}
+
+/* ---- two main tabs; the rest under "Everything else" ---- */
+.group-btn{font:inherit;font-family:var(--sans);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:12px 14px;cursor:pointer}
+.group-btn[aria-expanded="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+.group-btn:hover{color:var(--ink)}
+.topics.sub{margin-top:0;border-top:0;background:var(--surface-2,transparent)}
+.topics.sub .topic-btn{font-size:10px;padding-top:9px;padding-bottom:9px}
+.topics[hidden]{display:none}
+#topic-more .intro{margin-bottom:18px}

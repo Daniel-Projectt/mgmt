@@ -310,11 +310,19 @@ const panels = [...new Set((html.match(/data-panel="([^"]+)"/g) || []).map(s => 
 console.log('  panels: ' + panels.join(', '));
 panels.forEach(pn => {
   const [t, mo] = pn.split('/');
+  if (pn === 'more/notes') return;   // notes only: nothing to switch
   ok(html.includes('data-modes="' + t + '"'), 'panel ' + pn + ' has a mode switch');
   ok(new RegExp('data-modes="' + t + '"[\\s\\S]*?data-mode="' + mo + '"').test(html), 'panel ' + pn + ' has its mode button');
 });
 ['guide'].concat(tps, ['exam']).forEach(t => ok(html.includes('data-topic="' + t + '"') && html.includes('id="topic-' + t + '"'), 'topic ' + t + ' has a tab and a section'));
-ok((html.match(/class="topic-btn"/g) || []).length === 8, 'eight tabs');
+ok((html.match(/class="topic-btn"/g) || []).length === 9, 'nine tabs: Quiz 3, and eight under Everything else');
+ok(/<nav class="topics" role="tablist"[^>]*>\s*<button class="topic-btn" role="tab" data-topic="q3" aria-selected="true">Quiz 3<\/button>\s*<button class="group-btn"[^>]*>Everything else<\/button>\s*<\/nav>/.test(html), 'the main bar holds only Quiz 3 and Everything else');
+ok((html.split('id="elseNav"')[1].split('</nav>')[0].match(/class="topic-btn"/g) || []).length === 8, 'the other eight tabs sit under Everything else');
+ok(/\.topics\[hidden\]\{display:none\}/.test(html), 'the hidden second row of tabs really is hidden');
+ok(A.CH.more.notes.length === 7 && A.CH.more.notes.every(n => /^more-/.test(n.id) && /^Chapter (9|10): /.test(n.h)) && !A.CH.more.decks, 'the rest of Chapters 9 and 10 is back as notes only');
+ok(!A.STUDY.includes('more') && A.QB.every(q => q.tp !== 'more'), 'the extra notes carry no questions and no flashcards');
+const moreIds = (A.CH.more.notes.map(n => n.body).join(' ').match(/ id="([a-z0-9-]+)"/g) || []);
+ok(moreIds.length > 15 && moreIds.every(x => /id="more-/.test(x)), 'the extra notes use their own anchors', moreIds.length);
 
 // ---------- Quiz 3 (Chapters 9 and 10) ----------
 head('quiz 3');
@@ -359,7 +367,7 @@ const q3tf = q3.filter(q => q.t === 'tf');
 ok(Math.abs(q3tf.filter(q => q.a).length - q3tf.filter(q => !q.a).length) <= 3, 'true and false are balanced', q3tf.filter(q => q.a).length + ' true / ' + q3tf.filter(q => !q.a).length + ' false');
 A.Q3_TERMS.forEach(t => ok(q3.some(q => new RegExp(t[0].replace(/^Organizational /, '').replace(/e?s$/, ''), 'i').test(q.q + ' ' + q.a)), 'a question on the term: ' + t[0]));
 ok(A.PAIRSETS.q3.pairs.length === 13, 'match and identification use only the 13 terms');
-ok(/data-topic="guide"\s+aria-selected="true"/.test(html), 'Guide is the first, default tab');
+ok(/data-topic="q3" aria-selected="true"/.test(html) && /id="topic-guide" hidden/.test(html), 'Quiz 3 is the first, default tab');
 ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
 ['div', 'section', 'button', 'nav', 'main', 'header', 'footer', 'svg', 'symbol', 'table', 'g', 'ol', 'ul', 'h3', 'h4', 'thead', 'tbody', 'tr', 'span'].forEach(t => {
   const open = (html.match(new RegExp('<' + t + '[\\s>]', 'g')) || []).length;
@@ -369,7 +377,7 @@ ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
 ok(html.includes('id="flourish"') && html.includes('id="emblem"') && html.includes('class="rail left"') && html.includes('class="emblem"'), 'ornaments, emblem and side rails present');
 ok(/M60 20v80M20 60h80/.test(html), 'the emblem is the quartered circle, not the marketing one');
 ok(html.includes('rel="manifest"') && html.includes('sw.js') && fs.existsSync(path.join(ROOT, 'sw.js')) && fs.existsSync(path.join(ROOT, 'manifest.webmanifest')), 'PWA pieces: manifest and service worker');
-ok(/"mgmt-v5"/.test(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')) && /Principles of Management/.test(fs.readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8')), 'service worker and manifest are this page’s own');
+ok(/"mgmt-v6"/.test(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')) && /Principles of Management/.test(fs.readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8')), 'service worker and manifest are this page’s own');
 ok(html.includes('og:image') && html.includes('/mgmt/preview.png'), 'link preview metadata');
 ok(!/Kotler|Ch\. 5|"pom\.|["\[]c[5-8]["\]]/.test(src.replace(/\/\*[\s\S]*?\*\//g, '')), 'nothing left over from the marketing page in the code');
 ok(!/�/.test(html), 'no broken characters');

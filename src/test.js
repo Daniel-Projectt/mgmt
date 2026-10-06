@@ -348,7 +348,14 @@ for (let r = 0; r < 60; r++) {
   const m = A.matchRound('q3', 6); ok(m.items.length === 6, 'quiz 3: match round of six');
 }
 for (let r = 0; r < 10; r++) ok(A.finalFifty(50).every(q => q.tp !== 'q3'), 'quiz 3 never enters The 50');
-ok(q3.length >= 35 && q3.length <= 45, 'a focused set of quiz 3 questions', q3.length);
+ok(q3.length >= 40 && q3.length <= 55, 'a focused set of quiz 3 questions', q3.length);
+// no question that answers itself: every wrong choice must come from the same three slides
+const Q3VOCAB = /duplication|centraliz|decentraliz|member domination|social loafing|groupthink|unity of command|chain of command|reengineer|empower|autonomy|departmentaliz|organizational|structure|process|turnover|satisfaction|quality|decision|perspectives|product development|reward|purpose|resources|independent|work together|cooperation|accountable|cohesive|interdependency|standardization|team size|alternatives|solution|problem|result|talking|effort|bosses|boss|authority|units|redesign|improvement|membership|departments|laziness|use a team|conditions|one or two|pressure/i;
+q3.filter(q => q.t === 'mc').forEach(q => q.w.forEach(w => ok(Q3VOCAB.test(w), 'quiz 3 wrong choice is a near neighbour, not a throwaway', q.q + ' :: ' + w)));
+ok(!/payroll|very large|base pay|shorter hours|fewer meetings|every kind of work|small, gradual|is one of the disadvantages of teams/i.test(JSON.stringify(q3)), 'the giveaway questions are gone');
+ok(q3.filter(q => q.ap).length >= 10 && q3.filter(q => q.t === 'tf').length >= 10, 'ten or more scenarios and ten or more true/false', q3.filter(q => q.ap).length + '/' + q3.filter(q => q.t === 'tf').length);
+const q3tf = q3.filter(q => q.t === 'tf');
+ok(Math.abs(q3tf.filter(q => q.a).length - q3tf.filter(q => !q.a).length) <= 3, 'true and false are balanced', q3tf.filter(q => q.a).length + ' true / ' + q3tf.filter(q => !q.a).length + ' false');
 A.Q3_TERMS.forEach(t => ok(q3.some(q => new RegExp(t[0].replace(/^Organizational /, '').replace(/e?s$/, ''), 'i').test(q.q + ' ' + q.a)), 'a question on the term: ' + t[0]));
 ok(A.PAIRSETS.q3.pairs.length === 13, 'match and identification use only the 13 terms');
 ok(/data-topic="guide"\s+aria-selected="true"/.test(html), 'Guide is the first, default tab');
@@ -361,7 +368,7 @@ ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
 ok(html.includes('id="flourish"') && html.includes('id="emblem"') && html.includes('class="rail left"') && html.includes('class="emblem"'), 'ornaments, emblem and side rails present');
 ok(/M60 20v80M20 60h80/.test(html), 'the emblem is the quartered circle, not the marketing one');
 ok(html.includes('rel="manifest"') && html.includes('sw.js') && fs.existsSync(path.join(ROOT, 'sw.js')) && fs.existsSync(path.join(ROOT, 'manifest.webmanifest')), 'PWA pieces: manifest and service worker');
-ok(/"mgmt-v3"/.test(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')) && /Principles of Management/.test(fs.readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8')), 'service worker and manifest are this page’s own');
+ok(/"mgmt-v4"/.test(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')) && /Principles of Management/.test(fs.readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8')), 'service worker and manifest are this page’s own');
 ok(html.includes('og:image') && html.includes('/mgmt/preview.png'), 'link preview metadata');
 ok(!/Kotler|Ch\. 5|"pom\.|["\[]c[5-8]["\]]/.test(src.replace(/\/\*[\s\S]*?\*\//g, '')), 'nothing left over from the marketing page in the code');
 ok(!/�/.test(html), 'no broken characters');

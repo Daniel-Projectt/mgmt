@@ -11,11 +11,14 @@ var store = {
 };
 var CORNERS = ['tl','tr','bl','br'].map(function(c){ return '<svg class="c '+c+'" aria-hidden="true"><use href="#corner"/></svg>'; }).join('');
 var CHAPTERS = ["plan","decide","strategy","organize","people"];
+/* Quiz 3 has its own tab with notes, cards, match and quiz, but stays out of the Exam 2 guide, practice exam and The 50 */
+var STUDY = CHAPTERS.concat(["q3"]);
 var TOPIC_NAMES = {};
-CHAPTERS.forEach(function(tp){ TOPIC_NAMES[tp] = CH[tp].short; });
+STUDY.forEach(function(tp){ TOPIC_NAMES[tp] = CH[tp].short; });
 /* Every question and card carries the id of the study-guide section it belongs to */
 var SEC_TITLES = {}, SEC_CHAPTER = {};
 GUIDE.sections.forEach(function(s){ s.items.forEach(function(it){ SEC_TITLES[it.id] = it.t; SEC_CHAPTER[it.id] = s.tp; }); });
+Q3_SECTIONS.forEach(function(it){ SEC_TITLES[it.id] = it.t; SEC_CHAPTER[it.id] = "q3"; });
 
 /* How many of the ten Quizlet sets cover what a question asks: 3 = five or more,
    2 = four, 1 = three, 0 = fewer.
@@ -54,7 +57,7 @@ function verdictFor(p){
 /* Pair sets (term, meaning) per chapter, from every deck not marked match:false.
    Used for Match and for generated identification questions.                    */
 var PAIRSETS = {};
-CHAPTERS.forEach(function(tp){
+STUDY.forEach(function(tp){
   var pairs = [];
   CH[tp].decks.forEach(function(d){ if(d.match === false) return; d.cards.forEach(function(c){ pairs.push([c[0], c[1], c[2]]); }); });
   pairs = uniqBy(uniqBy(pairs, function(p){ return p[1]; }), function(p){ return p[0]; });

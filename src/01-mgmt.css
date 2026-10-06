@@ -145,3 +145,11 @@
   .gitem{grid-template-columns:1fr;box-shadow:none;break-inside:avoid;padding:8px 10px}
   .gitem.ok{background:none}
 }
+
+/* ---- quiz 3 call-out on the guide ---- */
+.q3call{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 18px;background:var(--surface);border:1px solid var(--gold-soft,var(--line));border-radius:3px;padding:16px 18px;margin:18px 0;box-shadow:var(--shadow)}
+.q3call b{display:block;font-family:var(--serif);font-weight:400;font-size:19px}
+.q3call span{display:block;color:var(--muted);font-size:14.5px;font-style:italic;margin-top:2px}
+.tbl.q3t th{white-space:normal}
+.tbl.q3t td.head{white-space:normal;letter-spacing:.1em}
+.tbl.q3t td{padding:11px 10px}

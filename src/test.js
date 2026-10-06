@@ -138,7 +138,7 @@ Object.keys(A.SEC_CHAPTER).forEach(id => {
 // ---------- 3b. every question and card belongs to a section ----------
 head('every question and card belongs to a section of the outline');
 const SEC = A.SEC_CHAPTER;
-ok(Object.keys(SEC).length === 24 && Object.keys(A.SEC_TITLES).length === 24, 'twenty-four sections known to the engine');
+ok(Object.keys(SEC).length === 32 && Object.keys(A.SEC_TITLES).length === 32, 'twenty-four exam sections plus the eight of Quiz 3 known to the engine');
 for (let i = 0; i < A.QB.length; i++) ok(A.QB[i] && typeof A.QB[i] === 'object', 'no empty slot in the question list (a stray double comma) at #' + i);
 A.QB.forEach((q, i) => ok(q.sec && SEC[q.sec] === q.tp, 'question #' + i + ' is tagged with a section of its own topic', q.sec + ' / ' + q.q.slice(0, 60)));
 tps.forEach(tp => A.CH[tp].decks.forEach(d => d.cards.forEach(c => ok(c[2] && SEC[c[2]] === tp, 'card is tagged with a section of its topic: ' + c[0], c[2]))));
@@ -230,7 +230,7 @@ tps.forEach(tp => {
 });
 ok(A.QB.filter(q => q.off).length === 0, 'no question is switched off');
 A.QB.forEach((q, i) => {
-  ok(tps.includes(q.tp), 'known topic #' + i);
+  ok(tps.includes(q.tp) || q.tp === 'q3', 'known topic #' + i);
   ok(q.q && q.e, 'question and explanation #' + i);
   if (q.t === 'mc') {
     ok(q.w.length === 3, 'three wrong answers #' + i, q.q);
@@ -314,7 +314,45 @@ panels.forEach(pn => {
   ok(new RegExp('data-modes="' + t + '"[\\s\\S]*?data-mode="' + mo + '"').test(html), 'panel ' + pn + ' has its mode button');
 });
 ['guide'].concat(tps, ['exam']).forEach(t => ok(html.includes('data-topic="' + t + '"') && html.includes('id="topic-' + t + '"'), 'topic ' + t + ' has a tab and a section'));
-ok((html.match(/class="topic-btn"/g) || []).length === 7, 'seven tabs');
+ok((html.match(/class="topic-btn"/g) || []).length === 8, 'eight tabs');
+
+// ---------- Quiz 3 (Chapters 9 and 10) ----------
+head('quiz 3');
+const q3 = A.QB.filter(q => q.tp === 'q3'), q3strip = s => String(s).replace(/<[^>]+>/g, '');
+const q3html = A.CH.q3.notes.map(n => n.body).join(' '), q3body = q3strip(q3html);
+ok(A.Q3_SECTIONS.length === 8 && A.CH.q3.notes.length === 8 && A.CH.q3.notes.every((n, i) => 'g-' + n.id === A.Q3_SECTIONS[i].id && n.h === A.Q3_SECTIONS[i].t), 'eight sections, notes and outline agree');
+ok(A.CH.q3.notes.every(n => n.body.indexOf('<div class="point"><b>The point</b>') === 0 && /Be able to/.test(n.body)), 'every section opens with The point and Be able to');
+ok(A.Q3_TERMS.map(t => t[0]).join('|') === 'Teams|Social loafing|Reengineering|Centralization|Groupthink|Empowerment|Unity of command|Autonomy|Chain of command|Member domination|Organizational structure|Departmentalization|Organizational processes', 'the thirteen terms, in the order on the slide');
+const find = re => q3.find(q => re.test(q.q));
+ok(find(/product departmentalization is costly/).a === 'duplication', 'review slide 1: duplication');
+ok(find(/laziness and lack of desire/).a === false, 'review slide 2: social loafing is not defined as laziness');
+ok(find(/standardization is important, an organization may want to stay centralized/).a === true, 'review slide 3: standardization means centralized');
+['Duplication', 'not always laziness', 'Initial high turnover', 'Member domination', 'clear, engaging reason or purpose', 'Ample resources', 'complementary skills', 'mutually accountable', 'defining the problem', 'generating alternative solutions',
+ 'self-governing', 'Traditional work groups', 'Employee involvement teams', 'Semi-autonomous', 'Self-managing teams', 'Self-designing teams', 'Cross-functional', 'Virtual', 'one-time projects',
+ 'Informally agreed-on standards', 'watching others', 'griping', 'attracted to a team and motivated to remain in it', 'Cognitive (c-type)', 'Affective (a-type)',
+ 'Forming', 'Storming', 'Norming', 'De-norming', 'De-storming', 'De-forming', 'S.M.A.R.T.', 'attainable', 'Team level', 'average', 'variances',
+ 'Interpersonal skills', 'Conflict resolution', 'Skill-based pay', 'Gainsharing', 'Nonfinancial rewards',
+ 'Functional', 'Matrix', 'two bosses', 'Line authority', 'Staff authority', 'Standardization', 'Job enrichment', 'Mechanistic', 'Pooled', 'Sequential', 'Reciprocal', 'permanently'].forEach(v => ok(q3body.includes(v), 'quiz 3 notes include: ' + v));
+ok(/6&ndash;9/.test(q3html) && /4&ndash;6/.test(q3html) && /4&ndash;7/.test(q3html), 'the three team sizes from the slide');
+ok((q3html.match(/no Chapter 9 slides were provided/g) || []).length === 3, 'the three Chapter 9 sections say they come from the textbook');
+A.Q3_SECTIONS.forEach(s => {
+  const mine = q3.filter(q => q.sec === s.id);
+  ok(mine.length >= 8, 'at least eight questions for ' + s.t, mine.length);
+  ok(mine.some(q => q.t === 'tf') && mine.some(q => q.ap), 'true/false and application for ' + s.t);
+  ok(A.CH.q3.decks.some(d => d.cards.some(c => c[2] === s.id)), 'flashcards for ' + s.t);
+});
+ok(A.CH.q3.decks.length === 2 && A.CH.q3.decks[0].cards.length === 13 && A.CH.q3.decks[1].cards.length >= 40, 'two decks: the 13 terms, then the chapters', A.CH.q3.decks.map(d => d.cards.length).join(','));
+A.CH.q3.decks.forEach(d => ok(new Set(d.cards.map(c => c[0])).size === d.cards.length && d.cards.every(c => c.length === 3 && A.SEC_CHAPTER[c[2]] === 'q3'), 'cards unique, each in a quiz 3 section: ' + d.id));
+const allCards = A.CH.q3.decks.flatMap(d => d.cards);
+ok(new Set(allCards.map(c => c[0])).size === allCards.length && new Set(allCards.map(c => c[1])).size === allCards.length, 'no term or meaning repeats across the two decks');
+for (let r = 0; r < 60; r++) {
+  const qs = A.topicQuestions('q3', null, 10);
+  ok(qs.length === 10 && new Set(qs.map(q => q.key)).size === 10 && qs.every(q => q.tp === 'q3' && q.opts.filter(o => o.ok).length === 1), 'quiz 3: ten distinct questions, one right answer each');
+  ok(A.mockQuestions({ n: 40, types: 'all' }).every(q => q.tp !== 'q3'), 'quiz 3 never enters the practice exam');
+  const m = A.matchRound('q3', 6); ok(m.items.length === 6, 'quiz 3: match round of six');
+}
+for (let r = 0; r < 10; r++) ok(A.finalFifty(50).every(q => q.tp !== 'q3'), 'quiz 3 never enters The 50');
+ok(q3.length >= 80, 'plenty of quiz 3 questions', q3.length);
 ok(/data-topic="guide"\s+aria-selected="true"/.test(html), 'Guide is the first, default tab');
 ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
 ['div', 'section', 'button', 'nav', 'main', 'header', 'footer', 'svg', 'symbol', 'table', 'g', 'ol', 'ul', 'h3', 'h4', 'thead', 'tbody', 'tr', 'span'].forEach(t => {
@@ -325,7 +363,7 @@ ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
 ok(html.includes('id="flourish"') && html.includes('id="emblem"') && html.includes('class="rail left"') && html.includes('class="emblem"'), 'ornaments, emblem and side rails present');
 ok(/M60 20v80M20 60h80/.test(html), 'the emblem is the quartered circle, not the marketing one');
 ok(html.includes('rel="manifest"') && html.includes('sw.js') && fs.existsSync(path.join(ROOT, 'sw.js')) && fs.existsSync(path.join(ROOT, 'manifest.webmanifest')), 'PWA pieces: manifest and service worker');
-ok(/"mgmt-v1"/.test(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')) && /Principles of Management/.test(fs.readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8')), 'service worker and manifest are this page’s own');
+ok(/"mgmt-v2"/.test(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')) && /Principles of Management/.test(fs.readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8')), 'service worker and manifest are this page’s own');
 ok(html.includes('og:image') && html.includes('/mgmt/preview.png'), 'link preview metadata');
 ok(!/Kotler|Ch\. 5|"pom\.|["\[]c[5-8]["\]]/.test(src.replace(/\/\*[\s\S]*?\*\//g, '')), 'nothing left over from the marketing page in the code');
 ok(!/�/.test(html), 'no broken characters');

@@ -163,7 +163,18 @@ ok(/"types":"ap"/.test(w.localStorage.getItem('mgmt.mockcfg') || ''), 'exam sett
 head('remembers where you were');
 topic('strategy'); mode('strategy', 'cards');
 ok(w.localStorage.getItem('mgmt.topic') === 'strategy' && w.localStorage.getItem('mgmt.mode.strategy') === 'cards', 'topic and mode saved');
-ok($$('.topic-btn').length === 7, 'seven tabs');
+ok($$('.topic-btn').length === 8, 'eight tabs');
+head('quiz 3');
+topic('guide');
+ok(!!$('#guideRoot .q3call') && /Oct 7/.test($('#guideRoot .q3call').textContent), 'the guide announces Quiz 3');
+click($('#guideRoot .q3call button'));
+ok(visible($('#topic-q3')) && visible(panel('q3/notes')) && $$('#q3Notes .note-sec').length === 8, 'the call-out opens the Quiz 3 notes, eight sections');
+ok(/Duplication/.test($('#q3-hints').textContent) && $$('#q3-terms + .tblwrap tbody tr').length === 13, 'the three slide answers and the thirteen terms come first');
+mode('q3', 'cards');
+ok($$('.seg[data-decks="q3"] button').length === 2 && /13 terms/.test($('.seg[data-decks="q3"] button').textContent) && !!$('#q3Cards .flash'), 'flashcards open on the 13 terms');
+mode('q3', 'match'); ok($$('#q3Match .L .tile').length === 6, 'match round');
+mode('q3', 'quiz'); answerQuiz($('#q3Quiz'), 'quiz 3');
+ok(!$('#q3Quiz .qtag.tier'), 'no Quizlet tier label on Quiz 3 questions');
 
 head('the exam’s tier filter');
 topic('exam');

@@ -22,6 +22,7 @@ function renderGuide(){
       '<h2>'+COURSE.exam+'</h2><p class="hscope">'+COURSE.scope+'</p>'+
       '<ul class="hrules">'+COURSE.rules.map(li).join("")+'</ul>'+
     '</div>'+
+    '<div class="q3call"><div><b>Quiz #3 &middot; Wednesday, Oct 7</b><span>Chapters 9 and 10 &mdash; start with the last three slides.</span></div><button class="btn primary" type="button" data-go="q3/notes" data-a="q3-hints">Open Quiz 3</button></div>'+
     '<p class="note">'+COURSE.about+'</p>'+
     '<div class="gprog"><span class="count" id="gCount"></span><div class="bar"><i id="gBar" style="width:0"></i></div></div>';
   GUIDE.sections.forEach(function(s){
@@ -122,7 +123,7 @@ function renderMockSetup(){
 
 /* ================================================================ wiring */
 var engines = {};
-CHAPTERS.forEach(function(tp){
+STUDY.forEach(function(tp){
   var seg = $('.seg[data-decks="'+tp+'"]'), cur = CH[tp].decks[0].id;
   seg.innerHTML = CH[tp].decks.map(function(d, i){ return '<button type="button" data-deck="'+d.id+'" aria-pressed="'+(i === 0)+'">'+d.label+'</button>'; }).join("");
   engines[tp+"Cards"] = makeCards($("#"+tp+"Cards")); engines[tp+"Cards"].load(deckFor(tp, cur));
@@ -136,14 +137,14 @@ renderGuide();
 
 var ON_SHOW = {"exam/mock":function(){ if(!engines.mock) renderMockSetup(); }};
 var KEYS = {"exam/mock":function(e){ return engines.mock ? engines.mock.keys(e) : false; }};
-CHAPTERS.forEach(function(tp){
+STUDY.forEach(function(tp){
   ON_SHOW[tp+"/match"] = function(){ engines[tp+"Match"].ensure(); };
   ON_SHOW[tp+"/quiz"]  = function(){ engines[tp+"Quiz"].ensure(); };
   KEYS[tp+"/cards"] = function(e){ return engines[tp+"Cards"].keys(e); };
   KEYS[tp+"/quiz"]  = function(e){ return engines[tp+"Quiz"].keys(e); };
 });
-var TOPICS = ["guide","plan","decide","strategy","organize","people","exam"];
-var currentTopic = "guide", currentMode = {guide:"overview", plan:"notes", decide:"notes", strategy:"notes", organize:"notes", people:"notes", exam:"mock"};
+var TOPICS = ["guide","q3","plan","decide","strategy","organize","people","exam"];
+var currentTopic = "guide", currentMode = {guide:"overview", q3:"notes", plan:"notes", decide:"notes", strategy:"notes", organize:"notes", people:"notes", exam:"mock"};
 function showMode(topic, mode){
   currentMode[topic] = mode;
   $$('.seg[data-modes="'+topic+'"] button').forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === mode)); });

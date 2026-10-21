@@ -138,7 +138,7 @@ Object.keys(A.SEC_CHAPTER).forEach(id => {
 // ---------- 3b. every question and card belongs to a section ----------
 head('every question and card belongs to a section of the outline');
 const SEC = A.SEC_CHAPTER;
-ok(Object.keys(SEC).length === 25 && Object.keys(A.SEC_TITLES).length === 25, 'twenty-four exam sections plus the one of Quiz 3 known to the engine');
+ok(Object.keys(SEC).length === 30 && Object.keys(A.SEC_TITLES).length === 30, 'twenty-four exam sections, the one of Quiz 3 and the five of Exam 3 known to the engine');
 for (let i = 0; i < A.QB.length; i++) ok(A.QB[i] && typeof A.QB[i] === 'object', 'no empty slot in the question list (a stray double comma) at #' + i);
 A.QB.forEach((q, i) => ok(q.sec && SEC[q.sec] === q.tp, 'question #' + i + ' is tagged with a section of its own topic', q.sec + ' / ' + q.q.slice(0, 60)));
 tps.forEach(tp => A.CH[tp].decks.forEach(d => d.cards.forEach(c => ok(c[2] && SEC[c[2]] === tp, 'card is tagged with a section of its topic: ' + c[0], c[2]))));
@@ -230,7 +230,7 @@ tps.forEach(tp => {
 });
 ok(A.QB.filter(q => q.off).length === 0, 'no question is switched off');
 A.QB.forEach((q, i) => {
-  ok(tps.includes(q.tp) || q.tp === 'q3', 'known topic #' + i);
+  ok(tps.includes(q.tp) || q.tp === 'q3' || q.tp === 'x3', 'known topic #' + i);
   ok(q.q && q.e, 'question and explanation #' + i);
   if (q.t === 'mc') {
     ok(q.w.length === 3, 'three wrong answers #' + i, q.q);
@@ -315,8 +315,8 @@ panels.forEach(pn => {
   ok(new RegExp('data-modes="' + t + '"[\\s\\S]*?data-mode="' + mo + '"').test(html), 'panel ' + pn + ' has its mode button');
 });
 ['guide'].concat(tps, ['exam']).forEach(t => ok(html.includes('data-topic="' + t + '"') && html.includes('id="topic-' + t + '"'), 'topic ' + t + ' has a tab and a section'));
-ok((html.match(/class="topic-btn"/g) || []).length === 9, 'nine tabs: Quiz 3, and eight under Everything else');
-ok(/<nav class="topics" role="tablist"[^>]*>\s*<button class="topic-btn" role="tab" data-topic="q3" aria-selected="true">Quiz 3<\/button>\s*<button class="group-btn"[^>]*>Everything else<\/button>\s*<\/nav>/.test(html), 'the main bar holds only Quiz 3 and Everything else');
+ok((html.match(/class="topic-btn"/g) || []).length === 10, 'ten tabs: Exam 3, Quiz 3, and eight under Everything else');
+ok(/<nav class="topics" role="tablist"[^>]*>\s*<button class="topic-btn" role="tab" data-topic="x3" aria-selected="true">Exam 3<\/button>\s*<button class="topic-btn" role="tab" data-topic="q3" aria-selected="false">Quiz 3<\/button>\s*<button class="group-btn"[^>]*>Everything else<\/button>\s*<\/nav>/.test(html), 'the main bar holds Exam 3, Quiz 3 and Everything else');
 ok((html.split('id="elseNav"')[1].split('</nav>')[0].match(/class="topic-btn"/g) || []).length === 8, 'the other eight tabs sit under Everything else');
 ok(/\.topics\[hidden\]\{display:none\}/.test(html), 'the hidden second row of tabs really is hidden');
 ok(A.CH.more.notes.length === 7 && A.CH.more.notes.every(n => /^more-/.test(n.id) && /^Chapter (9|10): /.test(n.h)) && !A.CH.more.decks, 'the rest of Chapters 9 and 10 is back as notes only');
@@ -367,7 +367,30 @@ const q3tf = q3.filter(q => q.t === 'tf');
 ok(Math.abs(q3tf.filter(q => q.a).length - q3tf.filter(q => !q.a).length) <= 3, 'true and false are balanced', q3tf.filter(q => q.a).length + ' true / ' + q3tf.filter(q => !q.a).length + ' false');
 A.Q3_TERMS.forEach(t => ok(q3.some(q => new RegExp(t[0].replace(/^Organizational /, '').replace(/e?s$/, ''), 'i').test(q.q + ' ' + q.a)), 'a question on the term: ' + t[0]));
 ok(A.PAIRSETS.q3.pairs.length === 13, 'match and identification use only the 13 terms');
-ok(/data-topic="q3" aria-selected="true"/.test(html) && /id="topic-guide" hidden/.test(html), 'Quiz 3 is the first, default tab');
+ok(/data-topic="x3" aria-selected="true"/.test(html) && /id="topic-q3" hidden/.test(html) && /id="topic-guide" hidden/.test(html), 'Exam 3 is the first, default tab');
+
+// ---------- Exam 3 ----------
+head('Exam 3: only his eight review slides');
+const x3 = A.QB.filter(q => q.tp === 'x3'), x3html = A.CH.x3.notes.map(n => n.body).join(' '), x3body = q3strip(x3html);
+ok(A.X3_SECTIONS.length === 5 && A.CH.x3.notes.length === 5 && A.CH.x3.notes.every((n, i) => 'g-' + n.id === A.X3_SECTIONS[i].id), 'five sections, in order');
+A.CH.x3.notes.forEach(n => ok(n.body.indexOf('<div class="point"><b>The point</b>') === 0 && /<p class="able"><b>Be able to<\/b>/.test(n.body), 'section opens with the point and what to be able to do: ' + n.h));
+ok(A.X3_TERMS.map(t => t[0]).join('|') === A.Q3_TERMS.map(t => t[0]).join('|') + '|Diversity|Affirmative action|Big Five personality dimensions', 'the sixteen terms, in the order on his slide');
+['Duplication', 'Validation', 'Departmentalization', 'Centralization', 'Affective (a-type)', 'Surface-level and deep-level', 'not always laziness', 'opposite', 'Recruiting', 'Selection', 'Training', 'Performance appraisal', 'Compensation', 'Employee separation', 'back to recruiting',
+ 'truthfulness and accuracy', 'predicts future job performance', 'Skills-based diversity training', 'Awareness training', 'Diversity audits', 'Diversity pairing', 'social integration', '1961', 'January 21, 2025', 'still against the law',
+ 'Extraversion', 'Emotional stability', 'Agreeableness', 'Conscientiousness', 'Openness to experience', 'Dysfunctional / destructive', 'Ample resources'].forEach(v => ok(x3body.includes(v), 'exam 3 notes include: ' + v));
+ok(!/Disparate treatment|Adverse impact|quid pro quo|Pregnancy Discrimination|OSHA|De-norming|Gainsharing:|Self-designing|Modular|pay-level/i.test(x3body), 'nothing his review slides do not point to');
+A.X3_SECTIONS.forEach(s => { const mine = x3.filter(q => q.sec === s.id); ok(mine.length >= 8 && mine.some(q => q.t === 'tf') && mine.some(q => q.ap), 'questions, true/false and a scenario for ' + s.t, mine.length); });
+ok(x3.length >= 70 && x3.filter(q => q.ap).length >= 15 && x3.filter(q => q.t === 'tf').length >= 15, 'seventy or more questions, fifteen scenarios, fifteen true/false', x3.length);
+const x3tf = x3.filter(q => q.t === 'tf');
+ok(Math.abs(x3tf.filter(q => q.a).length - x3tf.filter(q => !q.a).length) <= 3, 'true and false are balanced', x3tf.filter(q => q.a).length + '/' + x3tf.filter(q => !q.a).length);
+const x3mc = x3.filter(q => q.t === 'mc'), olen3 = s => q3strip(s).length;
+ok(x3mc.filter(q => olen3(q.a) > Math.max(...q.w.map(olen3))).length / x3mc.length <= 0.30, 'on Exam 3 the right answer is rarely the longest');
+A.X3_TERMS.forEach(t => ok(x3.some(q => new RegExp(t[0].replace(/^Organizational |^Big Five.*/, m => m ? (m[0] === 'B' ? 'Big Five' : '') : '').replace(/e?s$/, ''), 'i').test(q.q + ' ' + q.a + ' ' + q.e)), 'an Exam 3 question on the term: ' + t[0]));
+for (let r = 0; r < 20; r++) { const all = A.exam3All(); ok(all.length === x3.length && new Set(all.map(q => q.key)).size === x3.length && all.every(q => q.tp === 'x3' && q.opts.filter(o => o.ok).length === 1), 'the Exam 3 quiz is every question, each once'); }
+ok(A.exam3All('g-x3-review').every(q => q.sec === 'g-x3-review') && A.exam3All('g-x3-review').length >= 15, 'the review questions can be drawn alone');
+for (let r = 0; r < 10; r++) ok(A.finalFifty(50).every(q => q.tp !== 'x3') && A.mockQuestions({ n: 40, types: 'all' }).every(q => q.tp !== 'x3'), 'Exam 3 stays out of the Exam 2 practice exam and The 50');
+ok(A.PAIRSETS.x3.pairs.length === 16 && A.CH.x3.decks[1].match === false, 'match uses only the sixteen terms');
+ok(/id="x3Notes"/.test(html) && /id="x3Cards"/.test(html) && /id="x3Match"/.test(html) && /id="x3Quiz"/.test(html), 'every Exam 3 panel exists');
 ok((html.match(/<script>/g) || []).length === 1, 'a single script block');
 ['div', 'section', 'button', 'nav', 'main', 'header', 'footer', 'svg', 'symbol', 'table', 'g', 'ol', 'ul', 'h3', 'h4', 'thead', 'tbody', 'tr', 'span'].forEach(t => {
   const open = (html.match(new RegExp('<' + t + '[\\s>]', 'g')) || []).length;

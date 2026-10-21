@@ -130,7 +130,7 @@ STUDY.forEach(function(tp){
   segWire('.seg[data-decks="'+tp+'"]', "data-deck", function(v){ cur = v; engines[tp+"Cards"].load(deckFor(tp, v)); });
   $('[data-shuffle="'+tp+'"]').addEventListener("click", function(){ engines[tp+"Cards"].load(deckFor(tp, cur)); });
   engines[tp+"Match"] = makeMatch($("#"+tp+"Match"), function(){ return matchRound(tp, 6); });
-  engines[tp+"Quiz"]  = makeQuiz($("#"+tp+"Quiz"), tp === "q3" ? quiz3All : function(){ return topicQuestions(tp, null, 10); });
+  engines[tp+"Quiz"]  = makeQuiz($("#"+tp+"Quiz"), tp === "q3" ? quiz3All : tp === "x3" ? function(){ return exam3All(); } : function(){ return topicQuestions(tp, null, 10); });
   renderNotes(tp);
 });
 renderNotes("more");
@@ -144,8 +144,8 @@ STUDY.forEach(function(tp){
   KEYS[tp+"/cards"] = function(e){ return engines[tp+"Cards"].keys(e); };
   KEYS[tp+"/quiz"]  = function(e){ return engines[tp+"Quiz"].keys(e); };
 });
-var TOPICS = ["q3","more","guide","plan","decide","strategy","organize","people","exam"];
-var currentTopic = "q3", lastElse = "more", currentMode = {guide:"overview", q3:"notes", more:"notes", plan:"notes", decide:"notes", strategy:"notes", organize:"notes", people:"notes", exam:"mock"};
+var TOPICS = ["x3","q3","more","guide","plan","decide","strategy","organize","people","exam"];
+var currentTopic = "x3", lastElse = "more", currentMode = {guide:"overview", x3:"notes", q3:"notes", more:"notes", plan:"notes", decide:"notes", strategy:"notes", organize:"notes", people:"notes", exam:"mock"};
 function showMode(topic, mode){
   currentMode[topic] = mode;
   $$('.seg[data-modes="'+topic+'"] button').forEach(function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === mode)); });
@@ -158,8 +158,8 @@ function showTopic(id){
   currentTopic = id;
   $$(".topic-btn").forEach(function(b){ b.setAttribute("aria-selected", String(b.getAttribute("data-topic") === id)); });
   $$(".topic").forEach(function(s){ s.hidden = (s.id !== "topic-"+id); });
-  /* Quiz 3 stands alone; every other tab lives under "Everything else" */
-  var other = (id !== "q3");
+  /* Exam 3 and Quiz 3 stand alone; every other tab lives under "Everything else" */
+  var other = (id !== "q3" && id !== "x3");
   if(other) lastElse = id;
   $("#elseNav").hidden = !other;
   $("#elseBtn").setAttribute("aria-expanded", String(other));
@@ -188,9 +188,9 @@ document.addEventListener("keydown", function(e){
 (function(){
   var t = store.get("topic");
   TOPICS.forEach(function(k){ var m = store.get("mode."+k); if(m && $('.seg[data-modes="'+k+'"] button[data-mode="'+m+'"]')) currentMode[k] = m; });
-  /* the first visit after Quiz 3 was added lands on Quiz 3, whatever was open before */
-  if(!store.get("seenQ3")){ t = "q3"; store.set("seenQ3", "1"); }
-  showTopic(t && TOPICS.indexOf(t) >= 0 ? t : "q3");
+  /* the first visit after Exam 3 was added lands on Exam 3, whatever was open before */
+  if(!store.get("seenX3")){ t = "x3"; store.set("seenX3", "1"); store.set("seenQ3", "1"); }
+  showTopic(t && TOPICS.indexOf(t) >= 0 ? t : "x3");
 })();
 
 /* ---- offline copy: the service worker keeps the page on the phone ---- */

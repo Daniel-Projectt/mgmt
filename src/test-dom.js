@@ -45,7 +45,12 @@ function answerQuiz(root, label) {
 
 head('landing');
 ok(errors.length === 0, 'no errors while loading', errors.join(' || '));
-ok(visible($('#topic-q3')) && !visible($('#topic-guide')) && $('#elseNav').hidden, 'opens on Quiz 3, with everything else tucked away');
+ok(visible($('#topic-x3')) && !visible($('#topic-q3')) && !visible($('#topic-guide')) && $('#elseNav').hidden, 'opens on Exam 3, with everything else tucked away');
+ok($$('#x3Notes .note-sec').length === 5 && /Validation/.test($('#x3Notes').textContent) && $$('#x3Notes .tbl').length >= 9, 'the Exam 3 notes render: five sections, his answers first');
+mode('x3', 'cards'); ok($$('.seg[data-decks="x3"] button').length === 2 && !!$('#x3Cards .flash'), 'Exam 3 flashcards');
+mode('x3', 'match'); ok($$('#x3Match .L .tile').length === 6, 'Exam 3 match round');
+mode('x3', 'quiz'); ok($$('#x3Quiz .dots i').length >= 70, 'the Exam 3 quiz runs every question', $$('#x3Quiz .dots i').length);
+mode('x3', 'notes'); topic('q3'); ok(visible($('#topic-q3')) && $('#elseNav').hidden, 'Quiz 3 still opens from the main bar');
 click($('#elseBtn'));
 ok(visible($('#topic-more')) && !$('#elseNav').hidden && $('#elseBtn').getAttribute('aria-expanded') === 'true' && $$('#moreNotes .note-sec').length === 7, 'Everything else opens the other tabs, starting on the Chapter 9-10 notes');
 topic('plan'); topic('q3');
@@ -171,7 +176,7 @@ ok(/"types":"ap"/.test(w.localStorage.getItem('mgmt.mockcfg') || ''), 'exam sett
 head('remembers where you were');
 topic('strategy'); mode('strategy', 'cards');
 ok(w.localStorage.getItem('mgmt.topic') === 'strategy' && w.localStorage.getItem('mgmt.mode.strategy') === 'cards', 'topic and mode saved');
-ok($$('.topic-btn').length === 9, 'nine tabs');
+ok($$('.topic-btn').length === 10, 'ten tabs');
 head('quiz 3');
 topic('guide');
 ok(!!$('#guideRoot .q3call') && /Oct 7/.test($('#guideRoot .q3call').textContent), 'the guide announces Quiz 3');

@@ -12,13 +12,14 @@ var store = {
 var CORNERS = ['tl','tr','bl','br'].map(function(c){ return '<svg class="c '+c+'" aria-hidden="true"><use href="#corner"/></svg>'; }).join('');
 var CHAPTERS = ["plan","decide","strategy","organize","people"];
 /* Quiz 3 has its own tab with notes, cards, match and quiz, but stays out of the Exam 2 guide, practice exam and The 50 */
-var STUDY = CHAPTERS.concat(["q3"]);
+var STUDY = CHAPTERS.concat(["q3","x3"]);
 var TOPIC_NAMES = {};
 STUDY.forEach(function(tp){ TOPIC_NAMES[tp] = CH[tp].short; });
 /* Every question and card carries the id of the study-guide section it belongs to */
 var SEC_TITLES = {}, SEC_CHAPTER = {};
 GUIDE.sections.forEach(function(s){ s.items.forEach(function(it){ SEC_TITLES[it.id] = it.t; SEC_CHAPTER[it.id] = s.tp; }); });
 Q3_SECTIONS.forEach(function(it){ SEC_TITLES[it.id] = it.t; SEC_CHAPTER[it.id] = "q3"; });
+X3_SECTIONS.forEach(function(it){ SEC_TITLES[it.id] = it.t; SEC_CHAPTER[it.id] = "x3"; });
 
 /* How many of the ten Quizlet sets cover what a question asks: 3 = five or more,
    2 = four, 1 = three, 0 = fewer.
@@ -141,6 +142,8 @@ function topicQuestions(tp, keys, n){
 }
 /* Quiz 3 is short enough to take whole: every written question, reshuffled each time */
 function quiz3All(){ return shuffle(bankFor("q3").map(function(x){ return fromBank(x.b, x.i); })); }
+/* Exam 3 the same way: every written question once; "review" keeps to his sample questions */
+function exam3All(sec){ return shuffle(bankFor("x3").filter(function(x){ return !sec || x.b.sec === sec; }).map(function(x){ return fromBank(x.b, x.i); })); }
 /* Rebuild exact questions from their keys ("tp:i" bank, "tp:pN" / "tp:pNr" pairs); anything malformed is dropped */
 function questionsByKeys(keys){
   return uniqBy(keys, function(k){ return k; }).map(function(k){
